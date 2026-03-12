@@ -20,7 +20,6 @@ In a robotic application, JEPA functions as a **differentiable world model** int
 | **EBM (Energy)** | Critic | Scores how "plausible" or "desirable" a predicted future is based on the task goal. |
 | **MPC (Planner)** | Decision Maker | Searches through thousands of imagined paths to find the one with the lowest "Energy" (highest success). |
 
-## ---
 
 **🚀 Key Advantages for Autonomous Agents**
 
