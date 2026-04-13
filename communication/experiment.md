@@ -26,7 +26,7 @@ Symbols in this system acquire meaning through sensorimotor correlation. One age
 ### Mutual Information as Reward
 The learning signal is driven by **Information Gain (IG)**, derived from reducing entropy in the observer's belief over a symbol's effect. The reward for a demonstration is defined as the change in differential entropy:
 
-$$R = H_{before}(s) - H_{after}(s) = KL( P_{posterior} || P_{prior} )$$
+$$R = H_{\text{before}}(s) - H_{\text{after}}(s) = KL( P_{\text{posterior}} || P_{\text{prior}} )$$
 
 This reward is always non-negative and creates a mutual predictability loop. As the speaker becomes more consistent and the listener's internal world model updates to minimize prediction surprise, the agents converge on a shared understanding.
 
@@ -35,9 +35,9 @@ To manage the high-dimensional complexity of their environments, the robots util
 
 Crucially, these models are **conditioned on symbol exchange**. The agents treat the arbitrary symbols as high-level latent variables that resolve uncertainty in the joint embedding space. When a peer robot broadcasts a symbol, the observer's JEPA model uses that symbol as a conditional input to its state-transition predictor:
 
-$$P(\text{next\_latent} \mid \text{current\_latent}, \text{own\_action}, \text{peer\_symbol})$$
+$$P(z_{t+1} \mid z_t, a_t, s_t)$$
 
-By training these conditional predictors, the robots effectively learn the "semantics" of the symbols as modifiers of their world model's dynamics. A grounded symbol becomes a prompt that allows the JEPA model to accurately forecast the peer's movement, even through an opaque, incompatible embedding.
+By training these conditional predictors, the robots effectively learn the "semantics" of the symbols as modifiers of their world model's dynamics. A grounded symbol becomes a prompt that allows the JEPA model to accurately forecast the peer's movement (the future latent state $z_{t+1}$), even through an opaque, incompatible embedding.
 
 ### OaK Architecture
 The system employs the **Options and Knowledge (OaK)** framework to manage the task. Negotiation is modeled as a hierarchy of skills (Options), where each skill accumulates a return based on its internal policy and bootstraps into the next phase:
@@ -84,9 +84,7 @@ sequenceDiagram
     end
 
     rect rgb(245, 230, 230)
-    Note over A,B: Execution & Monitoring
-    A & B: Execute agreed behavioral sequence
-    A & B: Monitor internal predictions for divergence
+    Note over A,B: Agents execute agreed behavioral sequence and monitor predictions for divergence
     end
 ```
 
@@ -99,7 +97,7 @@ The success of the proposed framework is evaluated along both axes of communicat
     $$U(t) = \frac{1}{|V|} \sum_{s \in V} H(P(\Delta | s))$$
 
 *   **Grounded Task Efficiency (GTE)**: A composite metric directly linking representational understanding to physical task performance. It is defined as the total accumulated task progress (e.g., room swapping distance) scaled by the inverse of the cumulative communicative uncertainty. This metric penalizes agents that eventually succeed but maintain high entropy or require excessive demonstration:
-    $$\text{GTE} = \frac{\sum R_{task}}{\int U(t) dt}$$
+    $$\text{GTE} = \frac{\sum R_{\text{task}}}{\int U(t) dt}$$
 
 *   **Predictive Accuracy**: The statistical correlation between an agent's JEPA-predicted sensor deltas for a proposed symbol sequence and the actual sensory divergence observed during execution.
 
